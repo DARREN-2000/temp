@@ -1,101 +1,69 @@
 # Marketing Automation Data Pipeline
 
-A data engineering pipeline for automating marketing campaign analytics and lead scoring. Built as a portfolio project demonstrating ETL, data transformation, and automated reporting skills relevant to growth engineering and marketing data operations.
+I built this pipeline to automate the boring parts of marketing analytics. It pulls in campaign data, cleans it up, scores leads based on how engaged they are, and spits out reports the marketing team can actually use. The whole thing is a portfolio project but it solves a real problem that most marketing teams deal with. Bad data and no easy way to figure out which leads are worth chasing.
 
-## Overview
+## What it does
 
-This pipeline ingests marketing campaign data from multiple sources (email platforms, web analytics, CRM exports), transforms it through a standardized ETL process, computes lead scores using a rule-based model, and outputs actionable reports for marketing teams.
+You feed it campaign data from CSV and JSON files (the kind you export from email platforms, web analytics tools, CRM systems). It runs through a cleaning and validation step, scores each lead from 0 to 100 based on their engagement, groups them into Hot, Warm, or Cold buckets, and then calculates ROI numbers for each campaign. Everything gets saved to reports you can hand off to the team.
 
-## Architecture
+## How the data flows
 
-```
-[CSV/JSON Sources] → [Ingestion Layer] → [Transformation] → [Lead Scoring] → [Reports & Dashboards]
-         ↓                    ↓                  ↓                 ↓                    ↓
-    Email campaigns      Data validation     Deduplication     Score computation    CSV/JSON exports
-    Web analytics        Schema mapping      Enrichment        Segmentation         Summary stats
-    CRM exports          Type casting        Aggregation       Classification       Campaign metrics
-```
+Raw data comes in from the `data/` folder. The pipeline validates emails, removes duplicates, fills in missing fields, then passes everything through the scoring engine. Final output goes to `reports/` as CSV and JSON files plus a SQLite database if you want to query things later.
 
-## Features
+## What it can do
 
-- **Multi-source ingestion**: Reads campaign data from CSV, JSON, and simulated API responses
-- **Data quality checks**: Validates email formats, removes duplicates, handles missing values
-- **Lead scoring engine**: Rule-based scoring model using engagement metrics (open rates, click rates, page visits)
-- **Campaign ROI calculation**: Computes cost-per-lead, conversion rates, and ROI per channel
-- **Automated segmentation**: Classifies leads into Hot/Warm/Cold segments based on composite scores
-- **Export & reporting**: Generates summary reports in CSV and JSON formats
+- Reads campaign data from CSV and JSON files
+- Checks email formats and throws out invalid ones
+- Removes duplicate records so you dont count the same person twice
+- Scores leads on a 0 to 100 scale using open rates, click rates, page visits, and content downloads
+- Figures out cost per lead, conversion rates, and ROI for each campaign
+- Groups leads into Hot, Warm, and Cold segments so the sales team knows who to call first
+- Exports everything to CSV, JSON, and SQLite
 
-## Tech Stack
+## Built with
 
-- **Python 3.9+**
-- **pandas** - Data transformation and analysis
-- **SQLite** - Lightweight data warehouse
-- **logging** - Pipeline observability
+- Python 3.9+
+- pandas for data processing
+- SQLite for storing results
+- Standard logging for tracking what the pipeline does
 
-## Quick Start
+## Getting started
 
 ```bash
-# Install dependencies
 pip install -r requirements.txt
 
-# Generate sample data
 python generate_sample_data.py
 
-# Run the full pipeline
 python pipeline.py
-
-# Check outputs in the reports/ directory
 ```
 
-## Project Structure
+After running this check the `reports/` folder for your output files.
 
-```
-marketing-automation-pipeline/
-├── pipeline.py              # Main ETL pipeline orchestrator
-├── generate_sample_data.py  # Sample data generator for testing
-├── lead_scoring.py          # Lead scoring engine
-├── requirements.txt         # Python dependencies
-├── tests/
-│   └── test_pipeline.py     # Pipeline tests
-└── README.md
-```
+## Project files
 
-## How It Works
+- `pipeline.py` is the main script that runs everything
+- `generate_sample_data.py` creates fake but realistic data for testing
+- `lead_scoring.py` has the scoring logic
+- `requirements.txt` lists the Python packages you need
+- `tests/test_pipeline.py` has the tests
 
-### 1. Ingestion
-The pipeline reads campaign data from the `data/` directory. It supports CSV files from email platforms and JSON exports from web analytics tools.
+## How the scoring works
 
-### 2. Transformation
-- Standardizes column names and data types
-- Validates email formats using regex
-- Removes duplicate records based on email + campaign_id
-- Fills missing values with sensible defaults
-- Computes derived metrics (engagement rate, cost efficiency)
+Every lead gets a score between 0 and 100. The score is based on four things and each one has a different weight.
 
-### 3. Lead Scoring
-Each lead receives a composite score (0-100) based on:
-- Email open rate (weight: 0.2)
-- Click-through rate (weight: 0.3)
-- Website page visits (weight: 0.25)
-- Content downloads (weight: 0.25)
+Email open rate counts for 20% of the score. Click through rate is 30% because if someone is clicking links they are actually interested. Page visits make up 25% and content downloads are the remaining 25%.
 
-Leads are then segmented:
-- **Hot** (score >= 70): High intent, ready for sales outreach
-- **Warm** (score 40-69): Engaged, needs nurturing
-- **Cold** (score < 40): Low engagement, needs re-engagement campaign
+Once the score is calculated the lead gets put into a segment. Score 70 or above means Hot, these people are ready to talk to sales. Between 40 and 69 is Warm, they need more nurturing before they are ready. Below 40 is Cold, meaning they are not really engaging with the content.
 
-### 4. Campaign ROI
-For each campaign/channel, the pipeline calculates:
-- Total spend vs. total conversions
-- Cost per lead (CPL)
-- Conversion rate
-- Return on investment (ROI %)
+## Campaign ROI
 
-### 5. Reporting
-Outputs are saved to the `reports/` directory:
-- `scored_leads.csv` - All leads with their scores and segments
-- `campaign_summary.json` - ROI metrics per campaign
-- `pipeline_run.log` - Execution log with data quality metrics
+For each campaign the pipeline works out how much was spent versus how many people converted. It gives you cost per lead, the conversion rate as a percentage, and the overall ROI. This makes it easy to see which channels are actually working and which ones are burning money.
+
+## Output files
+
+Everything ends up in the `reports/` folder.
+
+`scored_leads.csv` has every lead with their score and segment. `campaign_summary.json` has the ROI numbers broken down by campaign. There is also `pipeline_run.log` which logs what happened during the run including how many records were cleaned out and why.
 
 ## License
 
