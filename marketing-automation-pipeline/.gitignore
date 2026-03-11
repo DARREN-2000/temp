@@ -1,8 +1,0 @@
-# Generated data and outputs
-data/
-reports/
-marketing.db
-pipeline_run.log
-__pycache__/
-.pytest_cache/
-*.pyc
