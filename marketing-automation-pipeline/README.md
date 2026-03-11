@@ -14,7 +14,7 @@ Raw data comes in from the `data/` folder. The pipeline validates emails, remove
 
 - Reads campaign data from CSV and JSON files
 - Checks email formats and throws out invalid ones
-- Removes duplicate records so you dont count the same person twice
+- Removes duplicate records so you don't count the same person twice
 - Scores leads on a 0 to 100 scale using open rates, click rates, page visits, and content downloads
 - Figures out cost per lead, conversion rates, and ROI for each campaign
 - Groups leads into Hot, Warm, and Cold segments so the sales team knows who to call first
@@ -53,7 +53,7 @@ Every lead gets a score between 0 and 100. The score is based on four things and
 
 Email open rate counts for 20% of the score. Click through rate is 30% because if someone is clicking links they are actually interested. Page visits make up 25% and content downloads are the remaining 25%.
 
-Once the score is calculated the lead gets put into a segment. Score 70 or above means Hot, these people are ready to talk to sales. Between 40 and 69 is Warm, they need more nurturing before they are ready. Below 40 is Cold, meaning they are not really engaging with the content.
+Once the score is calculated the lead gets put into a segment. Score 70 or above means Hot and these people are ready to talk to sales. Between 40 and 69 is Warm, meaning they need more nurturing before they are ready. Below 40 is Cold, they are not really engaging with the content.
 
 ## Campaign ROI
 
