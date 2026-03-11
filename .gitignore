@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Generated pipeline outputs
+marketing-automation-pipeline/data/
+marketing-automation-pipeline/reports/
+marketing-automation-pipeline/marketing.db
+marketing-automation-pipeline/pipeline_run.log
