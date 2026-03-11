@@ -34,6 +34,7 @@ logger = logging.getLogger(__name__)
 DATA_DIR = "data"
 REPORTS_DIR = "reports"
 DB_PATH = "marketing.db"
+ESTIMATED_REVENUE_PER_CONVERSION = 50  # USD per converted lead
 
 
 def ingest_leads(filepath):
@@ -123,8 +124,8 @@ def compute_campaign_roi(leads_df, campaigns_df):
 
         cpl = budget / max(total_leads, 1)
         conv_rate = (conversions / max(total_leads, 1)) * 100
-        # Assume $50 revenue per conversion for ROI calc
-        revenue = conversions * 50
+        # Revenue estimate based on configurable per-conversion value
+        revenue = conversions * ESTIMATED_REVENUE_PER_CONVERSION
         roi = ((revenue - budget) / max(budget, 1)) * 100
 
         result = {
